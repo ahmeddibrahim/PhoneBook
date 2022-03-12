@@ -32,6 +32,7 @@ public class Contact {
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
+        this.fullname = firstname + " " + lastname;
     }
 
     public String getLastname() {
@@ -40,6 +41,7 @@ public class Contact {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+        this.fullname = this.firstname + " " + this.lastname;
     }
 
     public boolean isFavorite() {
@@ -52,6 +54,6 @@ public class Contact {
 
     @Override
     public String toString() {
-        return "Contacts [\n  Firstname=" + firstname + ",\n  Lastname=" + lastname + ",\n  Favorite=" + favorite + "\n]";
+        return "Contacts [\n  Firstname= " + firstname + ",\n  Lastname= " + lastname + ",\n  Favorite= " + favorite + ",\n  Numbers = " + numbers +"\n]";
     }
 }

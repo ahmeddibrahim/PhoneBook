@@ -4,6 +4,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -13,6 +14,9 @@ import java.util.Map;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.regex;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -41,11 +45,21 @@ public class MongoDB {
         }
         return null;
     }
+
+    Contact findByName(String name){
+
+        String pattern = ".*"+name+".*";
+        for (Contact doc : collection.find(regex("fullname",pattern))) {
+                System.out.println(doc);
+                return doc;
+        }
+        return null;
+    }
     boolean checkDuplicates(Contact contact)
     {
         // check if the full name is in the database
         if(collection.find(eq("fullname", contact.getFullname())).first()!=null) {
-            System.out.println("Duplicate name in the system! Please try again");
+            System.err.println("Duplicate name in the system! Please try again");
             return false;
         }
 
@@ -56,7 +70,7 @@ public class MongoDB {
                 String k = entry.getKey();
             // check the contact being inserted with each number in the database
                 if (databaseNumbers.containsKey(k)) {
-                    System.out.println("Duplicate number in the system! Please try again");
+                    System.err.println("Duplicate number in the system! Please try again");
                     return false;
                 }
             }
@@ -77,4 +91,44 @@ public class MongoDB {
         }
     }
 
+    void updateContact(String fullname,Contact newContact){
+        try {
+            System.out.println(fullname);
+            UpdateResult result= collection.updateOne(eq("fullname",fullname),
+                    combine (set("firstname", newContact.getFirstname()),
+                            set("lastname", newContact.getLastname()),
+                            set("fullname",newContact.getFullname()),
+                            set("numbers",newContact.getNumbers()),
+                            set("favorite",newContact.isFavorite())));
+
+            System.out.println("Modified document count: " + result.getModifiedCount());
+        } catch (MongoException me) {
+            System.err.println("Unable to update due to an error: " + me);
+        }
+    }
+
+    void deleteContact(String fullname){
+        try{
+            collection.deleteOne(eq("fullname",fullname));}
+        catch (MongoException me){
+            System.err.println("Unable to delete contact due to an error: " + me);
+        }
+    }
+    void displayAllFavorites(){
+        try {
+            collection.find(eq("favorite", true)).forEach(contact -> System.out.println(contact));
+        }
+        catch (MongoException me){
+            System.err.println("Unable to diplay favorite contacts due to an error: " + me);
+        }
+    }
+    void displayAllContacts(){
+        try{
+            collection.find().forEach(contact -> System.out.println(contact));
+        }
+        catch (MongoException me){
+            System.err.println("Unable to display contacts due to an error: " + me);
+        }
+
+    }
 }
