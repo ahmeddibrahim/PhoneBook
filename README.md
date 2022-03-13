@@ -16,7 +16,7 @@
   * Numbers   (Hashmap<String,String>)
   * Favorite  (Boolean)
   
-###The functions provided for the Phonebook by the mongoDB class :
+### The functions provided for the Phonebook by the mongoDB class :
   * Insert a new contact.
   * Search for an existing Contact.
     * If available, a user can update, delete or mark contact as favorite.
