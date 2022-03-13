@@ -23,7 +23,9 @@ public class Contact {
     public void setNumbers(HashMap<String, String> numbers) {
         this.numbers = numbers;
     }
-
+    public void addNumber(String number, String type){
+        this.numbers.put(number,type);
+    }
     public String getFullname() {return this.fullname;}
 
     public String getFirstname() {

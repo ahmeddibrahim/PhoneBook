@@ -3,12 +3,14 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,14 +48,17 @@ public class MongoDB {
         return null;
     }
 
-    Contact findByName(String name){
+    ArrayList<Contact> findByName(String name){
 
+        ArrayList<Contact> contacts = new ArrayList<Contact>();
         String pattern = ".*"+name+".*";
+        int count = 0;
         for (Contact doc : collection.find(regex("fullname",pattern))) {
-                System.out.println(doc);
-                return doc;
+                System.out.println( " Index = "+count +" : "+ doc);
+                contacts.add(doc);
+                count++;
         }
-        return null;
+        return contacts;
     }
     boolean checkDuplicates(Contact contact)
     {
@@ -77,21 +82,24 @@ public class MongoDB {
         }
         return true;
     }
-    void insertContact(Contact contact) {
+    boolean insertContact(Contact contact) {
         if (!checkDuplicates(contact))
-            return;
+            return false;
         else {
             try {
                 InsertOneResult result = collection.insertOne(contact);
                 System.out.println("Success! Inserted document id: " + result.getInsertedId());
             } catch (MongoException me) {
                 System.err.println("Unable to insert due to an error: " + me);
+                return false;
             }
-
+            return true;
         }
     }
 
-    void updateContact(String fullname,Contact newContact){
+    boolean updateContact(String fullname,Contact newContact){
+        if(!checkDuplicates(newContact))
+            return false;
         try {
             System.out.println(fullname);
             UpdateResult result= collection.updateOne(eq("fullname",fullname),
@@ -102,16 +110,27 @@ public class MongoDB {
                             set("favorite",newContact.isFavorite())));
 
             System.out.println("Modified document count: " + result.getModifiedCount());
+            if(result.getModifiedCount()>0)
+                return true;
+            else
+                return false;
         } catch (MongoException me) {
             System.err.println("Unable to update due to an error: " + me);
+            return false;
         }
     }
 
-    void deleteContact(String fullname){
+    boolean deleteContact(String fullname){
         try{
-            collection.deleteOne(eq("fullname",fullname));}
+            DeleteResult result = collection.deleteOne(eq("fullname",fullname));
+           if(result.getDeletedCount()>0)
+                return true;
+           else
+               return false;
+        }
         catch (MongoException me){
             System.err.println("Unable to delete contact due to an error: " + me);
+            return false;
         }
     }
     void displayAllFavorites(){
