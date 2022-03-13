@@ -1,9 +1,9 @@
-#Phonebook Command Line Application:
+# Phonebook Command Line Application:
 
 * This project was built on Java 17 (LTS) and uses MongoDB through Atlas.
 * The excutable JAR file to run the program can be located through the following directories: out-> artifacts->Phonebook_jar->Phonebook.jar.
     
-#Summary:
+# Summary:
 * This program provides an interactive command line Phonebook, which is connected to Atlas cloud servers.
 * Multiple Phone Numbers can be assigned to a single contact.
 * Contact name or Phone number can't be duplicated across the Phonebook.
