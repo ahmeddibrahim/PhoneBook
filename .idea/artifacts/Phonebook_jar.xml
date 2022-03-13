@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Phonebook:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Phonebook_jar</output-path>
+    <root id="archive" name="Phonebook.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Phonebook.main" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mongodb/bson/4.5.0/4f00254008703fb38fa82a0f819157533818ca06/bson-4.5.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mongodb/mongodb-driver-sync/4.5.0/454f29c49cb9087c83fd158bc7f1d83889e2fb73/mongodb-driver-sync-4.5.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mongodb/mongodb-driver-core/4.5.0/67b64a666769eefb8308aac587953f49dfe17ae/mongodb-driver-core-4.5.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
